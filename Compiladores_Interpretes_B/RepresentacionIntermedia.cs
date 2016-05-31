@@ -28,9 +28,18 @@ namespace Compiladores_Interpretes_B
 
         public struct Simbolo
         {
-            string nombre;
-            object valor;
-            object tipo;
+            public string nombre;
+            public object valor;
+            public object tipo;
+            public List<int> arreglo; // Estructura que representa la costruccion de un arreglo
+            public Simbolo (string nom, object val, object t, List<int> arr)
+            {
+                nombre = nom;
+                valor = val;
+                tipo = t;
+                arreglo = arr;
+            }
+
         }
 
 
@@ -38,10 +47,12 @@ namespace Compiladores_Interpretes_B
         public List<Cuadruplo> gsTablaCuadruplo { get { return tablaDeCuadruplos; } set { tablaDeCuadruplos = value; } }
 
 
-        public int M { get { return tablaDeCuadruplos.Count; } }
-
         private List<Simbolo> tablaDeSimbolos;
         public List<Simbolo> gsTablaDeSimbolos { get { return tablaDeSimbolos; } set { tablaDeSimbolos = value; } }
+
+
+
+        public int M { get { return tablaDeCuadruplos.Count; } }
 
 
         public RepresentacionIntermedia()
@@ -80,10 +91,57 @@ namespace Compiladores_Interpretes_B
             }
         }
 
+        public void eliminaCuadruplo(int i)
+        {
+            try
+            {
+                tablaDeCuadruplos.RemoveAt(i);
+            }
+            catch
+            {
+
+            }
+        }
+
+
+        public void imprimeTablaDeSimbolos(DataGridView tabla)
+        {
+            try
+            {
+                List<int> ltipo;
+                string str;
+                int i = 0;
+                tabla.Rows.Clear();
+                foreach(Simbolo s in tablaDeSimbolos)
+                {
+                    str = "";
+                    tabla.Rows.Add();
+                    tabla.Rows[i].Cells[0].Value = i;
+                    tabla.Rows[i].Cells[1].Value = s.nombre;
+                    tabla.Rows[i].Cells[2].Value = s.valor;
+                    
+                    foreach(int n in s.arreglo)
+                    {
+                        str += n.ToString() + " "; 
+                    }
+                    tabla.Rows[i].Cells[3].Value = str;
+                    ltipo = s.arreglo;
+                    i++;
+                }
+
+            }
+            catch
+            {
+
+            }
+
+        }
+
         public void imprimeTablaCuadruplos(DataGridView tabla)
         {
             try
             {
+                
                 int i = 0;
                 tabla.Rows.Clear();
                 foreach (Cuadruplo c in tablaDeCuadruplos)
@@ -95,6 +153,7 @@ namespace Compiladores_Interpretes_B
                     tabla.Rows[i].Cells[3].Value = c.argumento2;
                     tabla.Rows[i].Cells[4].Value = c.resultado;
                     i++;
+                    
                 }
             }
             catch(Exception exc)
@@ -104,6 +163,11 @@ namespace Compiladores_Interpretes_B
         }
 
 
+
+        public void insertaSimbolo(string nom, object val, object tipo, List<int> arr)
+        {
+            tablaDeSimbolos.Add(new Simbolo(nom, val, tipo, arr));
+        }
 
 
     }

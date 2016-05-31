@@ -16,19 +16,35 @@ grammar Noob;
  * Parser Rules
  */
 
-prog: sentencia*;
+prog: sentencia fin # programa
+	;
 
-expr : expr op=('*'|'/') expr		# MulDiv
+fin :			# Final
+	;
+
+bloque : bloque sentencia		# bloqRec
+	   | sentencia				# bloqSent
+	   ;
+
+
+
+
+expr : SUB expr						# Menos
+	 | expr op=('*'|'/') expr		# MulDiv
      | expr op=('+'|'-') expr	    # AddSub
      | INT							# int
      | '(' expr ')'					# parens
 	 | var = variable				# id
-	 | var=variable  '=' expr		#Asig
      ;
+
+ expresion : var = variable IGUAL expr	#Asignacion
+		   | expr						#expre
+		   ;
 
 variable : ID      # ide
 	;
 
+	/* bloques booleanos */
 boolean: '!' boolean											# nb
 		| boolean '&&' boolean									# band
 		| boolean '||' boolean									# bor
@@ -36,14 +52,37 @@ boolean: '!' boolean											# nb
 		| '(' boolean ')'										# bparens
 		;
 
-
-sentencia: IF '(' boolean ')' sentencia						# condicion
-		 | IF '(' boolean ')' sentencia ELSE sentencia		# condicionElse
-		 | WHILE '(' boolean ')' sentencia					# cwhile
-		 | DO	sentencia WHILE '(' boolean ')' ';'			# cdowhile
-		 | FOR '(' INT ')'									# repetir
-		 | expr											
+		/* sentencias del programa */
+sentencia: IF '(' boolean ')' sentencia sentelse			# condicion
+		 | WHILE '(' boolean ')' sentencia					# swhile
+		 | DO	sentencia WHILE '(' boolean ')' ';'			# sdowhile
+		 | REPETIR '(' INT ')'								# srepetir
+		 | expresion ';'									# senExpr
+		 | '{' bloque  '}'									# sentBloque
+		 | declaracion										# sdeclaracion
 		 ;
+
+sentelse: ELSE sentencia			# celse
+		|							# vacio
+		;
+
+/* Declaracion de variables */
+declaracion	: tipo variable array otroId								# inicioDeclaracion
+			;
+
+
+	tipo	:	type = ('int' | 'float' | 'char')				# declaracionTipo
+			;
+
+	array	:	'[' n = INT ']'		array							# declaracionArray
+			|													# declaracionArrayVacio
+			;
+
+	otroId	:	',' variable	array otroId							# declaracionOtroId
+			|	';'												# finDeclaracion
+			;
+
+
 /*
  * Lexer Rules
  */
@@ -58,10 +97,14 @@ IF: 'if';
 ELSE: 'else';
 WHILE: 'while';
 DO: 'do';
-FOR: 'for';
+REPETIR: 'repetir';
+
+Int: 'int';
+Float: 'float';
+Char: 'char';
 
 
-ID:('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'0'..'9'|'_')*; 
+ID:('a'..'z'|'A'..'Z') ('a'..'z'|'A'..'Z'|'0'..'9'|'_')*; 
 IGUAL:['='];
 INT : [0-9]+;
 MUL : '*';

@@ -27,6 +27,7 @@ namespace Compiladores_Interpretes_B
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            
 
 
 
@@ -105,12 +106,14 @@ namespace Compiladores_Interpretes_B
                 NoobVisitor visitor = new NoobVisitor();
                 visitor.Visit(tree);
                 visitor.gsRepInt.imprimeTablaCuadruplos(this.TablaDeCuadruplos);
+                visitor.gsRepInt.imprimeTablaDeSimbolos(this.dtgTablaSimbolos);
                 inputStream.Close();
-               
+                string arbol = tree.ToStringTree(parser);
+
             }
             catch(Exception e)
             {
-                MessageBox.Show("" + e);
+                MessageBox.Show(" Error Sintactico ");
             }
 
         }
@@ -120,7 +123,7 @@ namespace Compiladores_Interpretes_B
             SaveFileDialog saveDialog = new SaveFileDialog();
 
             string cad = Application.StartupPath;
-            cad = cad.Replace("SLR\\bin\\Debug", "");
+            cad = cad.Replace("\\bin\\Debug", "");
             saveDialog.InitialDirectory = cad;
 
             saveDialog.Filter = "txt files (*.txt)|*.txt";
@@ -140,7 +143,7 @@ namespace Compiladores_Interpretes_B
             OpenFileDialog openDialog = new OpenFileDialog();
             openDialog.Filter = "txt files (*.txt)|*.txt";
             string cad = Application.StartupPath;
-            cad = cad.Replace("SLR\\bin\\Debug", "");
+            cad = cad.Replace("\\bin\\Debug", "");
             openDialog.InitialDirectory = cad;
 
             openDialog.FilterIndex = 2;
@@ -152,6 +155,24 @@ namespace Compiladores_Interpretes_B
                 AreaDeEscritura.LoadFile(openDialog.FileName, RichTextBoxStreamType.PlainText);
             }
 
+        }
+
+        private void OpcionesTexto_Click(object sender, EventArgs e)
+        {
+            ToolStripMenuItem opcion = sender as ToolStripMenuItem;
+            switch (opcion.Text)
+            {
+                case "Copiar":
+                    AreaDeEscritura.Copy();
+                    break;
+
+                case "Pegar":
+                    AreaDeEscritura.Paste();
+                    break;
+                case "Cortar":
+                    AreaDeEscritura.Cut();
+                    break;
+            }
         }
 
        

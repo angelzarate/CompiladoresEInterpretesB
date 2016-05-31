@@ -55,10 +55,16 @@
             this.Argumento1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Argumento2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Resultado = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dtgTablaSimbolos = new System.Windows.Forms.DataGridView();
+            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Nombre = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Valor = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Tipo = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.opcionesTexto.SuspendLayout();
             this.Menu.SuspendLayout();
             this.BarraDeHerramientas.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.TablaDeCuadruplos)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dtgTablaSimbolos)).BeginInit();
             this.SuspendLayout();
             // 
             // AreaDeEscritura
@@ -85,8 +91,9 @@
             // copiarToolStripMenuItem
             // 
             this.copiarToolStripMenuItem.Name = "copiarToolStripMenuItem";
-            this.copiarToolStripMenuItem.Size = new System.Drawing.Size(109, 22);
+            this.copiarToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.copiarToolStripMenuItem.Text = "Copiar";
+            this.copiarToolStripMenuItem.Click += new System.EventHandler(this.OpcionesTexto_Click);
             // 
             // toolStripSeparator1
             // 
@@ -98,6 +105,7 @@
             this.cortarToolStripMenuItem.Name = "cortarToolStripMenuItem";
             this.cortarToolStripMenuItem.Size = new System.Drawing.Size(109, 22);
             this.cortarToolStripMenuItem.Text = "Cortar";
+            this.cortarToolStripMenuItem.Click += new System.EventHandler(this.OpcionesTexto_Click);
             // 
             // toolStripSeparator2
             // 
@@ -109,6 +117,7 @@
             this.pegarToolStripMenuItem.Name = "pegarToolStripMenuItem";
             this.pegarToolStripMenuItem.Size = new System.Drawing.Size(109, 22);
             this.pegarToolStripMenuItem.Text = "Pegar";
+            this.pegarToolStripMenuItem.Click += new System.EventHandler(this.OpcionesTexto_Click);
             // 
             // Menu
             // 
@@ -116,7 +125,7 @@
             this.archivoToolStripMenuItem});
             this.Menu.Location = new System.Drawing.Point(0, 0);
             this.Menu.Name = "Menu";
-            this.Menu.Size = new System.Drawing.Size(1105, 24);
+            this.Menu.Size = new System.Drawing.Size(1104, 24);
             this.Menu.TabIndex = 1;
             this.Menu.Text = "menuStrip1";
             // 
@@ -184,7 +193,7 @@
             this.CompilarButton});
             this.BarraDeHerramientas.Location = new System.Drawing.Point(0, 24);
             this.BarraDeHerramientas.Name = "BarraDeHerramientas";
-            this.BarraDeHerramientas.Size = new System.Drawing.Size(1105, 43);
+            this.BarraDeHerramientas.Size = new System.Drawing.Size(1104, 43);
             this.BarraDeHerramientas.TabIndex = 2;
             this.BarraDeHerramientas.Text = "toolStrip1";
             // 
@@ -217,7 +226,7 @@
             this.TablaDeCuadruplos.Location = new System.Drawing.Point(506, 70);
             this.TablaDeCuadruplos.Name = "TablaDeCuadruplos";
             this.TablaDeCuadruplos.ReadOnly = true;
-            this.TablaDeCuadruplos.Size = new System.Drawing.Size(544, 475);
+            this.TablaDeCuadruplos.Size = new System.Drawing.Size(543, 300);
             this.TablaDeCuadruplos.TabIndex = 3;
             // 
             // Dir
@@ -250,11 +259,50 @@
             this.Resultado.Name = "Resultado";
             this.Resultado.ReadOnly = true;
             // 
+            // dtgTablaSimbolos
+            // 
+            this.dtgTablaSimbolos.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dtgTablaSimbolos.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.dataGridViewTextBoxColumn1,
+            this.Nombre,
+            this.Valor,
+            this.Tipo});
+            this.dtgTablaSimbolos.Location = new System.Drawing.Point(506, 376);
+            this.dtgTablaSimbolos.Name = "dtgTablaSimbolos";
+            this.dtgTablaSimbolos.ReadOnly = true;
+            this.dtgTablaSimbolos.Size = new System.Drawing.Size(443, 300);
+            this.dtgTablaSimbolos.TabIndex = 3;
+            // 
+            // dataGridViewTextBoxColumn1
+            // 
+            this.dataGridViewTextBoxColumn1.HeaderText = "Direccion";
+            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
+            this.dataGridViewTextBoxColumn1.ReadOnly = true;
+            // 
+            // Nombre
+            // 
+            this.Nombre.HeaderText = "Nombre";
+            this.Nombre.Name = "Nombre";
+            this.Nombre.ReadOnly = true;
+            // 
+            // Valor
+            // 
+            this.Valor.HeaderText = "Valor";
+            this.Valor.Name = "Valor";
+            this.Valor.ReadOnly = true;
+            // 
+            // Tipo
+            // 
+            this.Tipo.HeaderText = "Tipo";
+            this.Tipo.Name = "Tipo";
+            this.Tipo.ReadOnly = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1105, 581);
+            this.ClientSize = new System.Drawing.Size(1104, 681);
+            this.Controls.Add(this.dtgTablaSimbolos);
             this.Controls.Add(this.TablaDeCuadruplos);
             this.Controls.Add(this.BarraDeHerramientas);
             this.Controls.Add(this.AreaDeEscritura);
@@ -269,6 +317,7 @@
             this.BarraDeHerramientas.ResumeLayout(false);
             this.BarraDeHerramientas.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.TablaDeCuadruplos)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dtgTablaSimbolos)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -301,6 +350,11 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Argumento1;
         private System.Windows.Forms.DataGridViewTextBoxColumn Argumento2;
         private System.Windows.Forms.DataGridViewTextBoxColumn Resultado;
+        private System.Windows.Forms.DataGridView dtgTablaSimbolos;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Nombre;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Valor;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Tipo;
     }
 }
 
