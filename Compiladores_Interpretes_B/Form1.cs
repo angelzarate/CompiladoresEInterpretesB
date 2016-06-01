@@ -27,7 +27,8 @@ namespace Compiladores_Interpretes_B
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            
+            dtgTablaSimbolos.Font = new Font("Arial", 11);
+            TablaDeCuadruplos.Font = new Font("Arial", 11);
 
 
 

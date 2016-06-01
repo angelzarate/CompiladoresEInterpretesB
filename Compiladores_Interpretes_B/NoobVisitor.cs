@@ -8,26 +8,69 @@ namespace Compiladores_Interpretes_B
 {
     class NoobVisitor: NoobBaseVisitor<object>
     {
+       
+
+        #region estructura Arreglo
+
+        /// <summary>
+        ///  Estructura para acceder a una posicion del arreglo
+        /// </summary>
+        public struct structArray
+        {
+            public string nombre;
+            public string address;
+            public int apArray;
+
+            public structArray(string nom, string add, int ap)
+            {
+                nombre = nom;
+                address = add;
+                apArray = ap;
+
+            }
+
+            /* Constructor por copia */
+            public structArray(structArray arr1)
+            {
+                nombre = arr1.nombre;
+                address = arr1.nombre;
+                apArray = arr1.apArray;
+            }
+        }
+        #endregion
+
+        #region atributos de la clase
+        private int tipo;
         private RepresentacionIntermedia repInt;
         public RepresentacionIntermedia gsRepInt { get { return repInt; } }
 
 
-        private int tipo;
-
+        
         private int temp;
+
+        #endregion
+
+        #region constructor
         public NoobVisitor()
         {
             repInt = new RepresentacionIntermedia();
             tipo = -1;
 
         }
+        #endregion
+
+        #region creacion de variables temporales
         private string creaTemp()
         {
-            string t = "T" + temp.ToString();
+            string t = "_T" + temp.ToString();
             temp++;
             return t;
         }
 
+        #endregion
+
+
+        # region programa
         public override object VisitPrograma(NoobParser.ProgramaContext context)
         {
             object obj = Visit(context.sentencia());
@@ -82,6 +125,25 @@ namespace Compiladores_Interpretes_B
             //return base.VisitBloqRec(context);
         }
 
+
+
+        public override object VisitSentBloque(NoobParser.SentBloqueContext context)
+        {
+            object obj = Visit(context.bloque());
+            List<int> s = obj as List<int>;
+            if (s == null)
+            {
+                s = new List<int>();
+            }
+            return s;
+            //return base.VisitSentBloque(context);
+        }
+
+
+#endregion
+
+
+        #region Expresiones Aritmeticas
         public override object VisitInt(NoobParser.IntContext context)
         {
             string s = context.INT().GetText();
@@ -149,6 +211,33 @@ namespace Compiladores_Interpretes_B
             return Visit(context.expr());
         }
 
+
+
+
+
+
+        public override object VisitAsignacion(NoobParser.AsignacionContext context)
+        {
+            object a1 = Visit(context.expr());
+            //object a1 = base.VisitAsignacion(context);
+            this.repInt.insertaCuadruplo("=", a1.ToString(), "", context.var.GetText());
+            return context.var.GetText();
+        }
+
+        public override object VisitMenos(NoobParser.MenosContext context)
+        {
+            object a1 = Visit(context.expr());
+            //object a1 =  base.VisitMenos(context);
+            string s = creaTemp();
+            this.repInt.insertaCuadruplo("-", a1.ToString(), "", s);
+            return s;
+
+
+        }
+
+        #endregion
+
+        #region booleanos
         public override object VisitBsencillo(NoobParser.BsencilloContext context)
         {
             object left = Visit(context.expr(0));
@@ -232,7 +321,10 @@ namespace Compiladores_Interpretes_B
                // base.VisitBparens(context);
         }
 
+        #endregion
 
+
+        #region condicional
         public override object VisitCondicion(NoobParser.CondicionContext context)
         {
             
@@ -298,7 +390,14 @@ namespace Compiladores_Interpretes_B
             
         }
 
-        
+        #endregion
+
+
+        #region N
+        /// <summary>
+        ///  genera un salto incondicional 
+        /// </summary>
+        /// <returns></returns>
         public List<int> N()
         {
             List<int> Nlist = new List<int>();
@@ -307,7 +406,10 @@ namespace Compiladores_Interpretes_B
             return Nlist;
         }
 
+        #endregion
 
+
+        #region Ciclos
         public override object VisitSwhile(NoobParser.SwhileContext context)
         {
             List<int> S1;
@@ -355,42 +457,14 @@ namespace Compiladores_Interpretes_B
             
         }
 
-
-
-        public override object VisitSentBloque(NoobParser.SentBloqueContext context)
-        {
-            object obj = Visit(context.bloque());
-            List<int> s = obj as List<int>;
-            if(s == null)
-            {
-                s = new List<int>();
-            }
-            return s;
-            //return base.VisitSentBloque(context);
-        }
-
-
-        public override object VisitAsignacion(NoobParser.AsignacionContext context)
-        {
-            object a1 = Visit(context.expr());
-            //object a1 = base.VisitAsignacion(context);
-            this.repInt.insertaCuadruplo("=", a1.ToString(), "", context.var.GetText());
-            return context.var.GetText();
-        }
-
-        public override object VisitMenos(NoobParser.MenosContext context)
-        {
-            object a1 = Visit(context.expr());
-            //object a1 =  base.VisitMenos(context);
-            string s = creaTemp();
-            this.repInt.insertaCuadruplo("-", a1.ToString(), "", s );
-            return s;
-
-
-        }
+        #endregion
 
 
 
+
+
+
+        #region declaracion de variables
 
         public override object VisitInicioDeclaracion(NoobParser.InicioDeclaracionContext context)
         {
@@ -473,11 +547,272 @@ namespace Compiladores_Interpretes_B
             return base.VisitFinDeclaracion(context);
         }
 
-    
-    
-    
-    
-    
+        #endregion
+
+
+
+        #region Operaciones de Arreglos
+
+        /* operaciones de Arreglos */
+        public override object VisitAsignacionArray(NoobParser.AsignacionArrayContext context)
+        {
+            object obj = Visit(context.accesoArray());
+            object obj2 = Visit(context.expr());
+            string arr;
+            structArray arreglo = (structArray)obj;
+            arr = arreglo.nombre + " [" + arreglo.address + "]";
+
+            repInt.insertaCuadruplo("=", obj2.ToString(), "", arr);
+
+            return null;
+
+            //return base.VisitAsignacionArray(context);
+        }
+
+
+        public override object VisitGetElementoArray(NoobParser.GetElementoArrayContext context)
+        {
+
+            
+
+
+            object obj = Visit(context.accesoArray());
+            string arr;
+            structArray arreglo = (structArray)obj;
+            arr = arreglo.nombre + " [" + arreglo.address + "]";
+            string temp = creaTemp();
+            repInt.insertaCuadruplo("=", arr, "", temp);
+
+
+            return temp;
+            //return base.VisitGetElementoArray(context);
+        }
+
+
+        public override object VisitIdAccesoArray(NoobParser.IdAccesoArrayContext context)
+        {
+            string temp = creaTemp();
+            object obj = Visit(context.variable());
+            structArray sArray = new structArray(obj.ToString(),temp, 2);
+            obj = Visit(context.expr());
+            List<int> l = repInt.getTipoSimbolo(sArray.nombre);
+            int width = getTamArray(l,2);
+            repInt.insertaCuadruplo("*",obj.ToString(),width.ToString(),sArray.address);
+
+
+
+            return sArray;
+            
+            //return base.VisitIdAccesoArray(context);
+        }
+
+
+        public override object VisitRecursionAccesoArray(NoobParser.RecursionAccesoArrayContext context)
+        {
+            structArray sArray = new structArray();
+           
+
+
+            structArray sArray1 = (structArray)Visit(context.accesoArray());
+
+            sArray.nombre = sArray1.nombre;
+            sArray.apArray = sArray1.apArray + 2;
+           
+
+
+            object obj = Visit(context.expr());
+
+
+           
+           
+            List<int> l = repInt.getTipoSimbolo(sArray.nombre);
+            int width = getTamArray(l, sArray.apArray);
+
+            string t = creaTemp();
+            sArray.address = creaTemp();
+            repInt.insertaCuadruplo("*", obj.ToString(), width.ToString(), t);
+            repInt.insertaCuadruplo("+", sArray1.address, t, sArray.address);
+
+
+
+            return sArray;
+//            return base.VisitRecursionAccesoArray(context);
+        }
+
+
+
+
+        int getTamArray(List<int> tipoArray, int indice)
+        {
+            int tam = 1;
+            int i = indice;
+            for (; i < tipoArray.Count - 1; i += 2)
+            {
+                tam = tipoArray[i + 1] * tam;
+            }
+            switch (tipoArray[i])
+            {
+                case 1:
+                    tam = tam * sizeof(int);
+                    break;
+                case 2:
+                    tam = tam * sizeof(float);
+                    break;
+                case 3:
+                    tam = tam * sizeof(char);
+                    break;
+
+            }
+            return tam;
+
+        }
+
+        #endregion
+
+        #region definicion de funciones y procedimientos
+        public override object VisitDefinicionFuncion(NoobParser.DefinicionFuncionContext context)
+        {
+            object obj = Visit(context.variable());
+            string id = obj.ToString();
+            int m1, m2;
+            m1 = repInt.M;
+            List<int> snext, aux = new List<int>();
+            obj = Visit(context.sentencia());
+            m2 = repInt.M;
+            snext = obj as List<int>;
+            repInt.insertaSimbolo(id, m1, "func",aux);
+            repInt.backpatch(snext, m2);
+            repInt.insertaCuadruplo("endf", "", "", "");
+
+            return aux;
+
+
+            //return base.VisitDefinicionFuncion(context);
+        }
+
+        public override object VisitDefinicionProcedimiento(NoobParser.DefinicionProcedimientoContext context)
+        {
+
+            object obj = Visit(context.variable());
+            string id = obj.ToString();
+            int m1, m2;
+            m1 = repInt.M;
+            List<int> snext, aux = new List<int>();
+            obj = Visit(context.sentencia());
+            m2 = repInt.M;
+            snext = obj as List<int>;
+            repInt.insertaSimbolo(id, m1, "proc", aux);
+            repInt.backpatch(snext, m2);
+            repInt.insertaCuadruplo("endp", "", "", "");
+
+            return aux;
+
+            //return base.VisitDefinicionProcedimiento(context);
+        }
+
+
+        #endregion
+
+
+
+        #region llamado a funciones y procedimientos
+        public override object VisitCallFuncion(NoobParser.CallFuncionContext context)
+        {
+
+
+            string address = creaTemp();
+            string id = Visit(context.variable()).ToString();
+            int pcount = (int)Visit(context.parametro());
+            repInt.insertaCuadruplo("=", "call " + id, pcount.ToString(), address);
+            return address;
+
+            //return base.VisitCallFuncion(context);
+        }
+
+        public override object VisitCallProcedimiento(NoobParser.CallProcedimientoContext context)
+        {
+            
+            string id = Visit(context.variable()).ToString();
+            int pcount = (int)Visit(context.parametro());
+            repInt.insertaCuadruplo(" ", "call " + id, pcount.ToString(), " ");
+            return new List<int>();
+
+            //return base.VisitCallProcedimiento(context);
+        }
+        #endregion
+
+
+
+        #region Return de funciones y procedeimientos
+        public override object VisitRetGeneral(NoobParser.RetGeneralContext context)
+        {
+            Visit(context.ret());
+            return new List<int>(); 
+            //return base.VisitRetGeneral(context);
+        }
+
+
+        public override object VisitRetFunc(NoobParser.RetFuncContext context)
+        {
+
+            string addres = Visit(context.expresion()).ToString();
+            repInt.insertaCuadruplo("return", "", "", addres);
+
+            return null;
+        }
+        
+
+        public override object VisitRetProc(NoobParser.RetProcContext context)
+        {
+            repInt.insertaCuadruplo("return", "", "", "");
+            return null;
+            //return base.VisitRetProc(context);
+        }
+        #endregion
+
+
+        #region parametros de funciones y procedimientos
+        public override object VisitParametroVacio(NoobParser.ParametroVacioContext context)
+        {
+            int i = 0;
+            return i;
+            //return base.VisitParametroVacio(context);
+        }
+
+        public override object VisitVacioParam(NoobParser.VacioParamContext context)
+        {
+            int i = 0;
+            return i;
+            //return base.VisitVacioParam(context);
+        }
+
+        public override object VisitPrimerParametro(NoobParser.PrimerParametroContext context)
+        {
+            int nparam;
+
+            string addres = Visit(context.expresion()).ToString();
+            repInt.insertaCuadruplo("param", "", "", addres);
+            nparam = 1 + (int)Visit(context.paramRec());
+
+            return nparam;
+            //return base.VisitPrimerParametro(context);
+        }
+
+        public override object VisitOtrosParametros(NoobParser.OtrosParametrosContext context)
+        {
+            int nparam;
+
+            string addres = Visit(context.expresion()).ToString();
+            repInt.insertaCuadruplo("param", "", "", addres);
+            nparam = 1 + (int)Visit(context.paramRec());
+
+            return nparam;
+
+
+            //return base.VisitOtrosParametros(context);
+        }
+        #endregion
+
     
     
     

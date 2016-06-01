@@ -69,8 +69,9 @@
             // 
             // AreaDeEscritura
             // 
+            this.AreaDeEscritura.AcceptsTab = true;
             this.AreaDeEscritura.ContextMenuStrip = this.opcionesTexto;
-            this.AreaDeEscritura.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.AreaDeEscritura.Font = new System.Drawing.Font("Arial Narrow", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AreaDeEscritura.Location = new System.Drawing.Point(12, 70);
             this.AreaDeEscritura.Name = "AreaDeEscritura";
             this.AreaDeEscritura.Size = new System.Drawing.Size(471, 475);
@@ -226,7 +227,7 @@
             this.TablaDeCuadruplos.Location = new System.Drawing.Point(506, 70);
             this.TablaDeCuadruplos.Name = "TablaDeCuadruplos";
             this.TablaDeCuadruplos.ReadOnly = true;
-            this.TablaDeCuadruplos.Size = new System.Drawing.Size(543, 300);
+            this.TablaDeCuadruplos.Size = new System.Drawing.Size(553, 300);
             this.TablaDeCuadruplos.TabIndex = 3;
             // 
             // Dir

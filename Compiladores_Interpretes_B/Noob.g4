@@ -28,19 +28,24 @@ bloque : bloque sentencia		# bloqRec
 
 
 
+	   /* Expresiones */
+expresion : var = variable IGUAL expr	# Asignacion
+		   | accesoArray	IGUAL expr	# AsignacionArray
+		   | expr						# expre
+		   ;
 
+		   /* Operciones Aritmeticas */
 expr : SUB expr						# Menos
+	 | accesoArray					# getElementoArray
 	 | expr op=('*'|'/') expr		# MulDiv
      | expr op=('+'|'-') expr	    # AddSub
      | INT							# int
      | '(' expr ')'					# parens
 	 | var = variable				# id
+	 | variable '(' parametro ')'	# callFuncion
      ;
 
- expresion : var = variable IGUAL expr	#Asignacion
-		   | expr						#expre
-		   ;
-
+	 /* variable */
 variable : ID      # ide
 	;
 
@@ -60,7 +65,15 @@ sentencia: IF '(' boolean ')' sentencia sentelse			# condicion
 		 | expresion ';'									# senExpr
 		 | '{' bloque  '}'									# sentBloque
 		 | declaracion										# sdeclaracion
+		 | variable '(' parametro ')' ';'					# callProcedimiento
+		 | 'return'	ret	';'									# retGeneral
+		 | definicion										# sdefincion
 		 ;
+
+	ret	 :	expresion										# retFunc
+		 |													# retProc
+		 ;
+
 
 sentelse: ELSE sentencia			# celse
 		|							# vacio
@@ -82,6 +95,25 @@ declaracion	: tipo variable array otroId								# inicioDeclaracion
 			|	';'												# finDeclaracion
 			;
 
+
+accesoArray	:   variable '[' expr ']'				# idAccesoArray
+			|   accesoArray '[' expr ']'			# recursionAccesoArray
+			;
+
+	/*  Funciones y procedimientos  */
+
+ definicion : 'func' variable '(' ')' '{' sentencia '}'			# definicionFuncion
+			| 'proc' variable '(' ')' '{' sentencia '}'			# definicionProcedimiento
+			;
+
+	/* Parametros de funciones */
+parametro : expresion paramRec		# primerParametro
+		  |							# vacioParam
+		  ;
+
+paramRec  : ',' expresion paramRec			# otrosParametros
+		  |							# parametroVacio
+		  ;
 
 /*
  * Lexer Rules

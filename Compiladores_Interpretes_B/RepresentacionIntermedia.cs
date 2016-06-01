@@ -170,5 +170,18 @@ namespace Compiladores_Interpretes_B
         }
 
 
+        public List<int> getTipoSimbolo(string nom)
+        {
+            Simbolo simb =  tablaDeSimbolos.Find(delegate(Simbolo s)
+            {
+                return s.nombre.Equals(nom);
+            });
+
+            
+            return simb.arreglo;
+        }
+
+
+
     }
 }
