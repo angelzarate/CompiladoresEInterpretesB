@@ -95,10 +95,12 @@ namespace Compiladores_Interpretes_B
 
         private void Compilar()
         {
+            AreaDeEscritura.SaveFile(ruta, RichTextBoxStreamType.PlainText);
+            StreamReader inputStream = new StreamReader(ruta);
             try
             {
-                AreaDeEscritura.SaveFile(ruta, RichTextBoxStreamType.PlainText);
-                StreamReader inputStream = new StreamReader(ruta);
+                
+              
                 AntlrInputStream input = new AntlrInputStream(inputStream.ReadToEnd());
                 NoobLexer lexer = new NoobLexer(input);
                 CommonTokenStream tokens = new CommonTokenStream(lexer);
@@ -114,7 +116,8 @@ namespace Compiladores_Interpretes_B
             }
             catch(Exception e)
             {
-                MessageBox.Show(" Error Sintactico ");
+                MessageBox.Show(" Error Sintactico "+e);
+                inputStream.Close();
             }
 
         }

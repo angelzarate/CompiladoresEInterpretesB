@@ -7,42 +7,44 @@ using System.Windows.Forms;
 
 namespace Compiladores_Interpretes_B
 {
+
+    public struct Cuadruplo 
+    {
+        public object operador;
+        public object argumento1;
+        public object argumento2;
+        public object resultado;
+
+        public Cuadruplo(object op, object ar1, object ar2, object res)
+        {
+            operador = op;
+            argumento1 = ar1;
+            argumento2 = ar2;
+            resultado = res;
+        }
+    }
+
+
+    public struct Simbolo 
+    {
+        public string nombre;
+        public object valor;
+        public object tipo;
+        public List<int> arreglo; // Estructura que representa la costruccion de un arreglo
+        public Simbolo(string nom, object val, object t, List<int> arr)
+        {
+            nombre = nom;
+            valor = val;
+            tipo = t;
+            arreglo = arr;
+        }
+
+    }
+
+
     class RepresentacionIntermedia
     {
-        public struct Cuadruplo
-        {
-            public object operador;
-            public object argumento1;
-            public object argumento2;
-            public object resultado;
-
-            public Cuadruplo(object op, object ar1, object ar2, object res)
-            {
-                operador = op;
-                argumento1 = ar1;
-                argumento2 = ar2;
-                resultado = res;
-            }
-        }
-
-
-        public struct Simbolo
-        {
-            public string nombre;
-            public object valor;
-            public object tipo;
-            public List<int> arreglo; // Estructura que representa la costruccion de un arreglo
-            public Simbolo (string nom, object val, object t, List<int> arr)
-            {
-                nombre = nom;
-                valor = val;
-                tipo = t;
-                arreglo = arr;
-            }
-
-        }
-
-
+      
         private List<Cuadruplo> tablaDeCuadruplos;
         public List<Cuadruplo> gsTablaCuadruplo { get { return tablaDeCuadruplos; } set { tablaDeCuadruplos = value; } }
 
@@ -77,12 +79,15 @@ namespace Compiladores_Interpretes_B
             Cuadruplo aux;
             try
             {
-                foreach (int i in listCuadruplo)
+                if (listCuadruplo != null)
                 {
-                    aux = tablaDeCuadruplos[i];
-                    aux.resultado = dir;
-                    tablaDeCuadruplos.RemoveAt(i);
-                    tablaDeCuadruplos.Insert(i, aux);
+                    foreach (int i in listCuadruplo)
+                    {
+                        aux = tablaDeCuadruplos[i];
+                        aux.resultado = dir;
+                        tablaDeCuadruplos.RemoveAt(i);
+                        tablaDeCuadruplos.Insert(i, aux);
+                    }
                 }
             }
             catch

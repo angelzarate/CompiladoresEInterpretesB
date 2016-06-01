@@ -62,7 +62,7 @@ namespace Compiladores_Interpretes_B
         #region creacion de variables temporales
         private string creaTemp()
         {
-            string t = "_T" + temp.ToString();
+            string t = " _T " + temp.ToString();
             temp++;
             return t;
         }
@@ -457,6 +457,32 @@ namespace Compiladores_Interpretes_B
             
         }
 
+
+
+        public override object VisitSentIterador(NoobParser.SentIteradorContext context)
+        {
+            int m1, m2, m3;
+            Visit(context.assignment(0));
+            m1 = repInt.M;
+            List<List<int>> btruefalse = Visit(context.boolean()) as List<List<int>>;
+            m2 = repInt.M;
+            Visit(context.assignment(1));
+            List<int> N1 = N();
+            m3 = repInt.M;
+            List<int> s1 = Visit(context.sentencia()) as List<int>;
+            repInt.backpatch(btruefalse[0], m3);
+            repInt.backpatch(N1, m1);
+            repInt.backpatch(s1, m2);
+            repInt.insertaCuadruplo("goto", "", "", m2.ToString());
+            
+
+
+
+            return btruefalse[1];
+
+         //   return base.VisitSentIterador(context);
+        }
+
         #endregion
 
 
@@ -669,6 +695,7 @@ namespace Compiladores_Interpretes_B
 
         #endregion
 
+
         #region definicion de funciones y procedimientos
         public override object VisitDefinicionFuncion(NoobParser.DefinicionFuncionContext context)
         {
@@ -813,8 +840,30 @@ namespace Compiladores_Interpretes_B
         }
         #endregion
 
-    
-    
-    
+
+        #region  entrada y salida
+
+        public override object VisitSentenciaPrint(NoobParser.SentenciaPrintContext context)
+        {
+            return base.VisitSentenciaPrint(context);
+        }
+
+        public override object VisitSentenciaRead(NoobParser.SentenciaReadContext context)
+        {
+            return base.VisitSentenciaRead(context);
+        }
+
+
+
+        #endregion
+
+
+
+
+
+
+
+
+
     }
 }

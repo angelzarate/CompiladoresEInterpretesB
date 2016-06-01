@@ -29,11 +29,13 @@ bloque : bloque sentencia		# bloqRec
 
 
 	   /* Expresiones */
-expresion : var = variable IGUAL expr	# Asignacion
+expresion : assignment					# expAsignacion
 		   | accesoArray	IGUAL expr	# AsignacionArray
 		   | expr						# expre
 		   ;
 
+assignment : var = variable IGUAL expr	# Asignacion
+		   ;
 		   /* Operciones Aritmeticas */
 expr : SUB expr						# Menos
 	 | accesoArray					# getElementoArray
@@ -58,16 +60,19 @@ boolean: '!' boolean											# nb
 		;
 
 		/* sentencias del programa */
-sentencia: IF '(' boolean ')' sentencia sentelse			# condicion
-		 | WHILE '(' boolean ')' sentencia					# swhile
-		 | DO	sentencia WHILE '(' boolean ')' ';'			# sdowhile
-		 | REPETIR '(' INT ')'								# srepetir
-		 | expresion ';'									# senExpr
-		 | '{' bloque  '}'									# sentBloque
-		 | declaracion										# sdeclaracion
-		 | variable '(' parametro ')' ';'					# callProcedimiento
-		 | 'return'	ret	';'									# retGeneral
-		 | definicion										# sdefincion
+sentencia: IF '(' boolean ')' sentencia sentelse							# condicion
+		 | WHILE '(' boolean ')' sentencia									# swhile
+		 | DO	sentencia WHILE '(' boolean ')' ';'							# sdowhile
+		 | REPETIR '(' INT ')'												# srepetir
+		 | FOR '(' assignment ';' boolean ';' assignment ')' sentencia		# sentIterador
+		 | expresion ';'													# senExpr
+		 | '{' bloque  '}'													# sentBloque
+		 | declaracion														# sdeclaracion
+		 | variable '(' parametro ')' ';'									# callProcedimiento
+		 | 'return'	ret	';'													# retGeneral
+		 | definicion														# sdefincion
+		 | 'print' expr														# sentenciaPrint
+		 | 'read'  variable													# sentenciaRead
 		 ;
 
 	ret	 :	expresion										# retFunc
@@ -129,7 +134,10 @@ IF: 'if';
 ELSE: 'else';
 WHILE: 'while';
 DO: 'do';
+FOR: 'for';
 REPETIR: 'repetir';
+
+
 
 Int: 'int';
 Float: 'float';
