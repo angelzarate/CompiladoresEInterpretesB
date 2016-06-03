@@ -60,7 +60,8 @@ boolean: '!' boolean											# nb
 		;
 
 		/* sentencias del programa */
-sentencia: IF '(' boolean ')' sentencia sentelse							# condicion
+sentencia: variable '(' parametro ')' ';'									# callProcedimiento
+		 | IF '(' boolean ')' sentencia sentelse							# condicion
 		 | WHILE '(' boolean ')' sentencia									# swhile
 		 | DO	sentencia WHILE '(' boolean ')' ';'							# sdowhile
 		 | REPETIR '(' INT ')'												# srepetir
@@ -68,7 +69,6 @@ sentencia: IF '(' boolean ')' sentencia sentelse							# condicion
 		 | expresion ';'													# senExpr
 		 | '{' bloque  '}'													# sentBloque
 		 | declaracion														# sdeclaracion
-		 | variable '(' parametro ')' ';'									# callProcedimiento
 		 | 'return'	ret	';'													# retGeneral
 		 | definicion														# sdefincion
 		 | 'print' expr														# sentenciaPrint
@@ -107,8 +107,8 @@ accesoArray	:   variable '[' expr ']'				# idAccesoArray
 
 	/*  Funciones y procedimientos  */
 
- definicion : 'func' variable '(' ')' '{' sentencia '}'			# definicionFuncion
-			| 'proc' variable '(' ')' '{' sentencia '}'			# definicionProcedimiento
+ definicion : 'func' variable '(' ')' '{' bloque '}'			# definicionFuncion
+			| 'proc' variable '(' ')' '{' bloque '}'			# definicionProcedimiento
 			;
 
 	/* Parametros de funciones */
@@ -144,7 +144,7 @@ Float: 'float';
 Char: 'char';
 
 
-ID:('a'..'z'|'A'..'Z') ('a'..'z'|'A'..'Z'|'0'..'9'|'_')*; 
+ID:(('a'..'z'|'A'..'Z') ('a'..'z'|'A'..'Z'|'0'..'9'|'_')*)|('$')INT; 
 IGUAL:['='];
 INT : [0-9]+;
 MUL : '*';

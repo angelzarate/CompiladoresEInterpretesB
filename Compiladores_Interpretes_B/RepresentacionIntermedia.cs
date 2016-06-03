@@ -28,7 +28,7 @@ namespace Compiladores_Interpretes_B
     public struct Simbolo 
     {
         public string nombre;
-        public object valor;
+        public object valor;      // Puede ser de valor array o double 
         public object tipo;
         public List<int> arreglo; // Estructura que representa la costruccion de un arreglo
         public Simbolo(string nom, object val, object t, List<int> arr)
@@ -117,6 +117,7 @@ namespace Compiladores_Interpretes_B
                 string str;
                 int i = 0;
                 tabla.Rows.Clear();
+                List<object> lObjects;
                 foreach(Simbolo s in tablaDeSimbolos)
                 {
                     str = "";
@@ -124,13 +125,34 @@ namespace Compiladores_Interpretes_B
                     tabla.Rows[i].Cells[0].Value = i;
                     tabla.Rows[i].Cells[1].Value = s.nombre;
                     tabla.Rows[i].Cells[2].Value = s.valor;
-                    
-                    foreach(int n in s.arreglo)
+
+                    lObjects = s.valor as List<object>;
+                    if(lObjects != null)
                     {
-                        str += n.ToString() + " "; 
+                        foreach (object n in lObjects)
+                        {
+                            str += n.ToString() + " ";
+                        }
+                        tabla.Rows[i].Cells[2].Value = str;
+                        str = "";
                     }
-                    tabla.Rows[i].Cells[3].Value = str;
-                    ltipo = s.arreglo;
+                    else
+                    {
+                        tabla.Rows[i].Cells[2].Value = s.valor;
+                    }
+                    if (s.tipo != null)
+                    {
+                        tabla.Rows[i].Cells[3].Value = s.tipo;
+                    }
+                    else
+                    {
+                        foreach (int n in s.arreglo)
+                        {
+                            str += n.ToString() + " ";
+                        }
+                        tabla.Rows[i].Cells[3].Value = str;
+                        ltipo = s.arreglo;
+                    }
                     i++;
                 }
 
@@ -171,7 +193,38 @@ namespace Compiladores_Interpretes_B
 
         public void insertaSimbolo(string nom, object val, object tipo, List<int> arr)
         {
-            tablaDeSimbolos.Add(new Simbolo(nom, val, tipo, arr));
+            if (arr.Count > 1) // Si es un arreglo 
+            {
+                tablaDeSimbolos.Add(new Simbolo(nom, creaArreglo(tamTotalArray(arr)), tipo, arr));
+            }
+            else
+            {
+                tablaDeSimbolos.Add(new Simbolo(nom, val, tipo, arr));
+            }
+        }
+
+
+
+
+        private List<object> creaArreglo(int tam)
+        {
+            List<object> array = new List<object>();
+            for(int i = 0; i<tam; i++)
+            {
+                array.Add(0.0);
+            }
+            return array;
+        }
+
+        private int tamTotalArray(List<int> tipoArray)
+        {
+            int tam = 1;
+            int i = 0;
+            for (; i < tipoArray.Count - 1; i += 2)
+            {
+                tam = tipoArray[i + 1] * tam;
+            }
+            return tam;
         }
 
 
@@ -184,6 +237,16 @@ namespace Compiladores_Interpretes_B
 
             
             return simb.arreglo;
+        }
+
+        public bool existeSimbolo(string nom)
+        {
+
+            return tablaDeSimbolos.Exists(delegate(Simbolo s)
+            {
+                return s.nombre.Equals(nom);
+            });
+
         }
 
 

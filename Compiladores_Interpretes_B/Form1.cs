@@ -108,10 +108,14 @@ namespace Compiladores_Interpretes_B
                 IParseTree tree = parser.prog();
                 NoobVisitor visitor = new NoobVisitor();
                 visitor.Visit(tree);
-                visitor.gsRepInt.imprimeTablaCuadruplos(this.TablaDeCuadruplos);
-                visitor.gsRepInt.imprimeTablaDeSimbolos(this.dtgTablaSimbolos);
+                
                 inputStream.Close();
                 string arbol = tree.ToStringTree(parser);
+                Interprete inter = new Interprete(visitor.gsRepInt.gsTablaCuadruplo, visitor.gsRepInt.gsTablaDeSimbolos);
+                inter.EjecutarPrograma();
+
+                visitor.gsRepInt.imprimeTablaCuadruplos(this.TablaDeCuadruplos);
+                visitor.gsRepInt.imprimeTablaDeSimbolos(this.dtgTablaSimbolos);
 
             }
             catch(Exception e)

@@ -62,7 +62,9 @@ namespace Compiladores_Interpretes_B
         #region creacion de variables temporales
         private string creaTemp()
         {
-            string t = " _T " + temp.ToString();
+            string t = "_T" + temp.ToString();
+
+            repInt.insertaSimbolo(t, 0, 0, new List<int>());
             temp++;
             return t;
         }
@@ -147,6 +149,13 @@ namespace Compiladores_Interpretes_B
         public override object VisitInt(NoobParser.IntContext context)
         {
             string s = context.INT().GetText();
+            if (repInt.existeSimbolo(s) == false)
+            {
+                List<int> l = new List<int>();
+                l.Add(1);
+
+                repInt.insertaSimbolo(s, int.Parse(s), null, l);
+            }
             return int.Parse(s);
         }
 
@@ -704,7 +713,7 @@ namespace Compiladores_Interpretes_B
             int m1, m2;
             m1 = repInt.M;
             List<int> snext, aux = new List<int>();
-            obj = Visit(context.sentencia());
+            obj = Visit(context.bloque());
             m2 = repInt.M;
             snext = obj as List<int>;
             repInt.insertaSimbolo(id, m1, "func",aux);
@@ -725,7 +734,7 @@ namespace Compiladores_Interpretes_B
             int m1, m2;
             m1 = repInt.M;
             List<int> snext, aux = new List<int>();
-            obj = Visit(context.sentencia());
+            obj = Visit(context.bloque());
             m2 = repInt.M;
             snext = obj as List<int>;
             repInt.insertaSimbolo(id, m1, "proc", aux);
@@ -750,7 +759,7 @@ namespace Compiladores_Interpretes_B
             string address = creaTemp();
             string id = Visit(context.variable()).ToString();
             int pcount = (int)Visit(context.parametro());
-            repInt.insertaCuadruplo("=", "call " + id, pcount.ToString(), address);
+            repInt.insertaCuadruplo( "call f", id, pcount.ToString(), address);
             return address;
 
             //return base.VisitCallFuncion(context);
@@ -761,7 +770,7 @@ namespace Compiladores_Interpretes_B
             
             string id = Visit(context.variable()).ToString();
             int pcount = (int)Visit(context.parametro());
-            repInt.insertaCuadruplo(" ", "call " + id, pcount.ToString(), " ");
+            repInt.insertaCuadruplo( "call p" , id, pcount.ToString(), "");
             return new List<int>();
 
             //return base.VisitCallProcedimiento(context);
