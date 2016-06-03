@@ -45,7 +45,7 @@ namespace Compiladores_Interpretes_B
         public RepresentacionIntermedia gsRepInt { get { return repInt; } }
 
 
-        
+        private int nstr;
         private int temp;
 
         #endregion
@@ -55,6 +55,8 @@ namespace Compiladores_Interpretes_B
         {
             repInt = new RepresentacionIntermedia();
             tipo = -1;
+            temp = 0;
+            nstr = 0;
 
         }
         #endregion
@@ -67,6 +69,14 @@ namespace Compiladores_Interpretes_B
             repInt.insertaSimbolo(t, 0, 0, new List<int>());
             temp++;
             return t;
+        }
+
+        private string creaStr(string cad)
+        {
+            string t = "_str" + nstr.ToString();
+            repInt.insertaSimbolo(t,cad, 0, new List<int>());
+            return t;
+
         }
 
         #endregion
@@ -862,6 +872,24 @@ namespace Compiladores_Interpretes_B
             return base.VisitSentenciaRead(context);
         }
 
+
+
+        public override object VisitPrintCad(NoobParser.PrintCadContext context)
+        {
+            string obj = context.CAD().GetText();
+            repInt.insertaCuadruplo("print", creaStr(obj), "", "");
+            creaStr(obj);
+            return new List<int>();
+           
+        }
+
+        public override object VisitPrintExpr(NoobParser.PrintExprContext context)
+        {
+            object obj = Visit(context.expr());
+            repInt.insertaCuadruplo("print", obj.ToString(), "", "");
+            return new List<int>();
+            //return base.VisitPrintExpr(context);
+        }
 
 
         #endregion

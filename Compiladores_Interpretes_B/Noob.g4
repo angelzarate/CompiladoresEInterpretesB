@@ -71,10 +71,13 @@ sentencia: variable '(' parametro ')' ';'									# callProcedimiento
 		 | declaracion														# sdeclaracion
 		 | 'return'	ret	';'													# retGeneral
 		 | definicion														# sdefincion
-		 | 'print' expr														# sentenciaPrint
-		 | 'read'  variable													# sentenciaRead
+		 | 'print' print ';'												# sentenciaPrint
+		 | 'read'  variable	';'												# sentenciaRead
 		 ;
 
+ print : expr							# printExpr
+		|  var = CAD 				# printCad
+		;
 	ret	 :	expresion										# retFunc
 		 |													# retProc
 		 ;
@@ -154,6 +157,7 @@ SUB : '-';
 NOT: '!';
 AND: '&&';
 OR: '||';
+CAD: '"'('a'..'z'|'A'..'Z'|'0'..'9'|'_'|' '|'+'|'-'|'*'|'/'|'-')*'"';
 WS
     :   (' ' | '\r' | '\n') -> channel(HIDDEN)
     ;

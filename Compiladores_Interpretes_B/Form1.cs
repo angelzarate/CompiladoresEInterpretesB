@@ -13,10 +13,51 @@ using Antlr4.Runtime.Misc;
 using Antlr4.Runtime.Tree;
 
 
+
+/* directivas para uso de consola */
+using System.Runtime.InteropServices;
+using System.Security;
+
+
+
+
+
 namespace Compiladores_Interpretes_B
 {
     public partial class Form1 : Form
     {
+
+        #region Incluir Consola
+        public static int AsignarConsola()
+        {
+            return AllocConsole() ? 0 : Marshal.GetLastWin32Error();
+        }
+
+        public static int LiberarConsola()
+        {
+            return FreeConsole() ? 0 : Marshal.GetLastWin32Error();
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage(
+     "Microsoft.Security",
+     "CA2118:ReviewSuppressUnmanagedCodeSecurityUsage"),
+     SuppressUnmanagedCodeSecurity]
+        [DllImport("kernel32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        static extern bool AllocConsole();
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage(
+          "Microsoft.Security",
+          "CA2118:ReviewSuppressUnmanagedCodeSecurityUsage"),
+          SuppressUnmanagedCodeSecurity]
+        [DllImport("kernel32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        static extern bool FreeConsole();
+
+
+        #endregion
+
+
 
         private string ruta;
         public Form1()
@@ -113,7 +154,9 @@ namespace Compiladores_Interpretes_B
                 string arbol = tree.ToStringTree(parser);
                 Interprete inter = new Interprete(visitor.gsRepInt.gsTablaCuadruplo, visitor.gsRepInt.gsTablaDeSimbolos);
                 inter.EjecutarPrograma();
-
+                /*
+                
+                 */
                 visitor.gsRepInt.imprimeTablaCuadruplos(this.TablaDeCuadruplos);
                 visitor.gsRepInt.imprimeTablaDeSimbolos(this.dtgTablaSimbolos);
 

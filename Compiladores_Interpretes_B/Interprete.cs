@@ -21,7 +21,7 @@ namespace Compiladores_Interpretes_B
 
         private int contadorProg;
         public int getContadorProg { get { return contadorProg; } }
-
+        EntradaSalida io;
 
         bool error;
         string errorSemantico;
@@ -32,6 +32,10 @@ namespace Compiladores_Interpretes_B
         private List<int> pilaDeLLamadas;
         private List<Simbolo> parametrosGenerales;
         private object valueReturn;
+
+
+        List<string> ListaDeCadenas;
+
 
         #endregion
 
@@ -44,9 +48,16 @@ namespace Compiladores_Interpretes_B
             listaParametroLocales = new List<Simbolo>();
             pilaDeLLamadas = new List<int>();
             parametrosGenerales = new List<Simbolo>();
+            ListaDeCadenas = new List<string>();
             error = false;
+            io = new EntradaSalida(ListaDeCadenas);
+            io.Show();
            
         }
+
+
+
+
 
         #endregion
 
@@ -157,7 +168,7 @@ namespace Compiladores_Interpretes_B
                             if (i != -1)
                             {
                                 Simbolo s = tablaDeSimbolos[i];
-                                parametrosGenerales.Insert(0,new Simbolo(s.nombre, s.valor, s.tipo, s.arreglo)); // Copia del parametro
+                                parametrosGenerales.Insert(0,new Simbolo(s.nombre, s.valor, s.tipo, s.arreglo)); 
                                 contadorProg++;
                             }
                             else
@@ -204,7 +215,15 @@ namespace Compiladores_Interpretes_B
                                 }
                                 else
                                 {
-                                    contadorProg++;
+                                    if (operador.Equals("print"))
+                                    {
+                                        imprimir(tablaDeCuadruplos[contadorProg]);
+                                        contadorProg++;
+                                    }
+                                    else
+                                    {
+                                        contadorProg++;
+                                    }
                                 }
 
                             }
@@ -216,8 +235,31 @@ namespace Compiladores_Interpretes_B
         #endregion
 
 
+        #region Print
 
-        #region Rutina de Return 
+        private void imprimir(Cuadruplo cuad)
+        {
+            int t = 0;
+            object obj = getValue(cuad.argumento1.ToString(), ref t);
+            if (obj != null)
+            {
+                this.ListaDeCadenas.Add(obj.ToString());
+
+                io.update(ListaDeCadenas);
+            }
+            else
+            {
+                error = true;
+                errorSemantico = "No existe el argumento " + cuad.argumento1.ToString();
+            }
+
+        }
+
+        #endregion
+
+
+
+        #region Rutina de Return
         private void rutinaReturn(Cuadruplo cuad)
         {
             int tipo = 0;
