@@ -14,10 +14,13 @@ namespace Compiladores_Interpretes_B
     {
 
         List<string> cadenasPuestas;
+
+        private double val;
+        public double getVal { get { return val; } }
         public EntradaSalida(List<string> cad)
         {
             InitializeComponent();
-
+            val = 0;
             cadenasPuestas = cad;
         }
 
@@ -25,6 +28,7 @@ namespace Compiladores_Interpretes_B
         {
             Salida.Lines = cadenasPuestas.ToArray();
             Entrada.Focus();
+            this.Location = new Point(100, 100);
             TopMost = true;
         }
 
@@ -34,12 +38,27 @@ namespace Compiladores_Interpretes_B
         {
             cadenasPuestas = cad;
             Salida.Lines = cadenasPuestas.ToArray();
+            this.Focus();
             Entrada.Focus();
+            
 
         }
         private void boton_OK_Click(object sender, EventArgs e)
         {
+            if (this.Modal)
+            {
+                try
+                {
+                    val = double.Parse(Entrada.Text);
+                    this.Close();
 
+                }
+                catch
+                {
+                    MessageBox.Show("Valor no valido");
+                }
+
+            }
         }
     }
 }

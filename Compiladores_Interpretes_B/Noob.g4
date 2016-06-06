@@ -71,8 +71,8 @@ sentencia: variable '(' parametro ')' ';'									# callProcedimiento
 		 | declaracion														# sdeclaracion
 		 | 'return'	ret	';'													# retGeneral
 		 | definicion														# sdefincion
-		 | 'print' print ';'												# sentenciaPrint
-		 | 'read'  variable	';'												# sentenciaRead
+		 | 'salida' print ';'												# sentenciaPrint
+		 | 'entrada'  variable	';'												# sentenciaRead
 		 ;
 
  print : expr							# printExpr
@@ -92,7 +92,7 @@ declaracion	: tipo variable array otroId								# inicioDeclaracion
 			;
 
 
-	tipo	:	type = ('int' | 'float' | 'char')				# declaracionTipo
+	tipo	:	type = ('int' | 'float')				# declaracionTipo
 			;
 
 	array	:	'[' n = INT ']'		array							# declaracionArray
@@ -133,11 +133,11 @@ MENIG:'>=';
 DIF:'!=';
 EQU: '==';
 
-IF: 'if';
-ELSE: 'else';
-WHILE: 'while';
-DO: 'do';
-FOR: 'for';
+IF: 'si';
+ELSE: 'sino';
+WHILE: 'mientras';
+DO: 'hacer';
+FOR: 'iterador';
 REPETIR: 'repetir';
 
 

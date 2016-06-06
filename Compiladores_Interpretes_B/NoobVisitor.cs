@@ -75,6 +75,7 @@ namespace Compiladores_Interpretes_B
         {
             string t = "_str" + nstr.ToString();
             repInt.insertaSimbolo(t,cad, 0, new List<int>());
+            nstr++;
             return t;
 
         }
@@ -869,7 +870,10 @@ namespace Compiladores_Interpretes_B
 
         public override object VisitSentenciaRead(NoobParser.SentenciaReadContext context)
         {
-            return base.VisitSentenciaRead(context);
+            object obj = Visit(context.variable());
+            repInt.insertaCuadruplo("read","","",obj.ToString());
+            return new List<int>();
+            
         }
 
 
@@ -878,7 +882,6 @@ namespace Compiladores_Interpretes_B
         {
             string obj = context.CAD().GetText();
             repInt.insertaCuadruplo("print", creaStr(obj), "", "");
-            creaStr(obj);
             return new List<int>();
            
         }

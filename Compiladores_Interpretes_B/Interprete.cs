@@ -55,10 +55,6 @@ namespace Compiladores_Interpretes_B
            
         }
 
-
-
-
-
         #endregion
 
         #region Ejecucion de programa
@@ -73,6 +69,8 @@ namespace Compiladores_Interpretes_B
 
                     procesaCuadruplos(tablaDeCuadruplos[contadorProg]);
                 }
+                ListaDeCadenas.Add("Programa Terminado");
+                io.update(ListaDeCadenas);
             }
 
         }
@@ -222,7 +220,16 @@ namespace Compiladores_Interpretes_B
                                     }
                                     else
                                     {
-                                        contadorProg++;
+                                        if(operador.Equals("read"))
+                                        {
+                                            Read(tablaDeCuadruplos[contadorProg]);
+                                            contadorProg++;
+                                        }
+
+                                        else
+                                        {
+                                            contadorProg++;
+                                        }
                                     }
                                 }
 
@@ -233,6 +240,38 @@ namespace Compiladores_Interpretes_B
             }
         }
         #endregion
+
+
+
+
+        #region
+
+        private void Read(Cuadruplo cuad)
+        {
+            io.Close();
+            io = new EntradaSalida(ListaDeCadenas);
+            io.update(ListaDeCadenas);
+            io.ShowDialog();
+
+            setValue(cuad.resultado.ToString(), io.getVal);
+            ListaDeCadenas.Add(io.getVal.ToString());
+            io = new EntradaSalida(ListaDeCadenas);
+            io.update(ListaDeCadenas);
+            io.Show();
+            
+
+
+
+        }
+
+        #endregion
+
+
+
+
+
+
+
 
 
         #region Print
@@ -491,7 +530,6 @@ namespace Compiladores_Interpretes_B
                         case 2:
                             i = i / sizeof(float);
                         break;
-
                         case 3:
                             i = i / sizeof(char);
                         break;
